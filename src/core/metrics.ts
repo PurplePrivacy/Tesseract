@@ -1,7 +1,7 @@
 export function computeMetrics(parsed: any) {
   const { source, functions, imports } = parsed;
 
-  const loc = source.getLineCount();
+  const loc = source.getEndLineNumber();
   const tokens = source.getFullText().split(/\s+/).length;
   const tokenDensity = tokens / loc;
 
