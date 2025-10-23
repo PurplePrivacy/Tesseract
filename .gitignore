@@ -1,2 +1,7 @@
 node_modules/
 reports/ 
+# Visualizer (Next.js build output)
+visualizer/.next/
+visualizer/out/
+visualizer/node_modules/
+visualizer/.env.local
