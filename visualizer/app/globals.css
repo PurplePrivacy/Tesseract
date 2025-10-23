@@ -1,0 +1,33 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #0f1115;
+  --card: #141821;
+  --muted: #9b9ba1;
+  --fg: #ececf1;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  color: var(--fg);
+  background: radial-gradient(1200px 800px at 10% -10%, #1c2331 0%, #0f1115 60%);
+  background-attachment: fixed;
+}
+
+.container {
+  @apply max-w-6xl mx-auto px-5 lg:px-6;
+}
+
+.card {
+  @apply bg-[#141821]/90 border border-white/10 rounded-2xl shadow-soft;
+  backdrop-filter: blur(8px);
+}
+
+.hint {
+  @apply text-sm text-ink-400;
+}
