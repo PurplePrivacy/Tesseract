@@ -1,9 +1,9 @@
 // src/core/analyzer.ts
 import fs from "fs";
 import path from "path";
-import { parseFile } from "./parser";
-import { computeMetrics } from "./metrics";
-import { computeScore } from "./scorer";
+import { parseFile } from "./parser.ts";
+import { computeMetrics } from "./metrics.ts";
+import { computeScore } from "./scorer.ts";
 
 export async function analyzeProject(basePath: string) {
   const files: string[] = [];
