@@ -6,7 +6,10 @@ export function reportResults(results: any[]) {
     head: ["File", "Cyclo", "Nest", "FanIn", "FanOut", "Density", "Score"],
   });
 
-  for (const r of results) {
+  // Sort by score desc so hotspots float
+  const sorted = [...results].sort((a, b) => (b.score ?? 0) - (a.score ?? 0));
+
+  for (const r of sorted) {
     const color =
       r.score < 30 ? chalk.green :
       r.score < 60 ? chalk.yellow :
@@ -14,12 +17,12 @@ export function reportResults(results: any[]) {
 
     table.push([
       r.file.replace(process.cwd(), "."),
-      r.cyclomatic,
-      r.nesting,
+      r.cyclomatic ?? 0,
+      r.nesting ?? 0,
       r.fanIn ?? 0,
-      r.fanOut,
-      r.tokenDensity.toFixed(2),
-      color(r.score),
+      r.fanOut ?? 0,
+      (r.tokenDensity ?? 0).toFixed(2),
+      color(r.score ?? 0),
     ]);
   }
 
