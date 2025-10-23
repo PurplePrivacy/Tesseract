@@ -11,6 +11,14 @@ export default async function Page() {
   const latest = reports[0];
   const data = latest ? await readReport(latest.filename) : null;
 
+  function getScoreColor(score: number) {
+    if (score < 20) return "text-green-400";      // Clear
+    if (score < 40) return "text-green-300";      // Stable
+    if (score < 60) return "text-yellow-400";     // Moderate
+    if (score < 80) return "text-orange-400";     // Complex
+    return "text-red-500";                        // Critical
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex items-end justify-between">
@@ -35,7 +43,7 @@ export default async function Page() {
             <StatCard title="Files analyzed" value={data.summary.totalFiles} />
             <StatCard
               title="Average score"
-              value={data.summary.avgScore.toFixed(1)}
+              value={<span className={getScoreColor(data.summary.avgScore)}>{data.summary.avgScore.toFixed(1)}</span>}
               hint="Composite index (0–100). Lower indicates less cognitive load."
             />
             <StatCard title="Max fan-out" value={data.summary.maxFanOut} />

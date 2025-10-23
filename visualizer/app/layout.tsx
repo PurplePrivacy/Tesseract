@@ -1,6 +1,7 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 
 export const metadata: Metadata = {
   title: "Tesseract Reports",
@@ -13,8 +14,18 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <header className="border-b border-white/10">
           <div className="container py-4 flex items-center justify-between">
-            <Link href="/" className="font-semibold tracking-wide">
-              Tesseract <span className="text-ink-400">Reports</span>
+            <Link href="/" className="flex items-center gap-2 font-semibold tracking-wide">
+              <Image
+                src="/logo-tesseract.png"
+                alt="Tesseract logo"
+                width={28}
+                height={28}
+                className="rounded-sm"
+                priority
+              />
+              <span>
+                Tesseract <span className="text-ink-400">Reports</span>
+              </span>
             </Link>
             <div className="text-sm text-ink-400">Auto-reading from /reports</div>
           </div>

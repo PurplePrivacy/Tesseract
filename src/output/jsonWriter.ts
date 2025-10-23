@@ -17,16 +17,21 @@ export function writeJsonReport(
   // Augment each file result with labels and priorities
   const filesAugmented = results.map((r) => {
     const labels = {
-      avgCyclomatic: grade(r.avgCyclomatic ?? 0, BANDS.avgCyclomatic, false),
-      avgNesting:    grade(r.avgNesting ?? 0,    BANDS.avgNesting,    false),
-      fanOutLocal:   grade(r.fanOutLocal ?? 0,   BANDS.fanOutLocal,   false),
-      tokenDensity:  grade(r.tokenDensity ?? 0,  BANDS.tokenDensity,  false),
-      commentRatio:  grade(r.commentRatio ?? 0,  BANDS.commentRatio,  true),
+      avgCyclomatic: grade(r.avgCyclomatic ?? 0, BANDS.avgCyclomatic, false, "avgCyclomatic"),
+      avgNesting:    grade(r.avgNesting ?? 0,    BANDS.avgNesting,    false, "avgNesting"),
+      fanOutLocal:   grade(r.fanOutLocal ?? 0,   BANDS.fanOutLocal,   false, "fanOutLocal"),
+      tokenDensity:  grade(r.tokenDensity ?? 0,  BANDS.tokenDensity,  false, "tokenDensity"),
+      commentRatio:  grade(r.commentRatio ?? 0,  BANDS.commentRatio,  true,  "commentRatio"),
     };
 
     const priority = computePrioritiesForFile({
       score: r.score ?? 0,
       fanIn: r.fanIn ?? 0,
+      avgCyclomatic: r.avgCyclomatic ?? 0,
+      avgNesting: r.avgNesting ?? 0,
+      fanOutLocal: r.fanOutLocal ?? 0,
+      tokenDensity: r.tokenDensity ?? 0,
+      commentRatio: r.commentRatio ?? 0,
       labels,
     });
 

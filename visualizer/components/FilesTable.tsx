@@ -64,7 +64,7 @@ export default function FilesTable({ files }: { files: ReportFileEntry[] }) {
                 <td className="p-2 text-right">{f.metrics.tokenDensity.toFixed(2)}</td>
                 <td className="p-2 text-right">
                   <MetricPill label={f.priority.prioritizedMetrics[0]?.label ?? "GOOD"} />
-                  <span className="ml-2 text-ink-400">{f.priority.prioritizedMetrics[0]?.metric}</span>
+                  <span className="ml-2 text-ink-400">{f.priority.prioritizedMetrics[0]?.insight || "—"}</span>
                 </td>
               </tr>
             ))}

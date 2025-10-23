@@ -4,6 +4,7 @@ export type Risk = "LOW" | "MEDIUM" | "HIGH";
 export interface GradeResult {
   label: Appreciation;
   severity: number;
+  insight?: string;
 }
 
 export interface ReportFileEntry {
@@ -33,7 +34,7 @@ export interface ReportFileEntry {
   priority: {
     level: "LOW" | "MEDIUM" | "HIGH";
     filePriority: number;
-    prioritizedMetrics: Array<{ metric: string; label: Appreciation; priorityScore: number }>;
+    prioritizedMetrics: Array<{ metric: string; label: Appreciation; priorityScore: number; insight?: string; }>;
   };
 }
 
