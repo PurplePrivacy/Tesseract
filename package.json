@@ -1,6 +1,6 @@
 {
   "name": "@purpleprivacy/tesseract-cli",
-  "version": "1.0.16",
+  "version": "1.0.17",
   "description": "Tesseract – The Refactoring Compass: Analyze code complexity, cognitive load, and architectural health.",
   "type": "module",
   "main": "./dist/cli.js",
