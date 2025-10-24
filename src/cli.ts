@@ -53,17 +53,15 @@ program
 
     if (!fs.existsSync(nextBuildDir)) {
       console.log("🧩 Building visualizer for the first time...");
-      spawn("npm", ["run", "build"], {
+      spawn(/^win/.test(process.platform) ? "npm.cmd" : "npm", ["run", "build"], {
         cwd: visualizerDir,
         stdio: "inherit",
-        shell: true,
       }).on("exit", (code) => {
         if (code === 0) {
           console.log("🚀 Launching visualizer (production mode)...");
-          spawn("npm", ["start"], {
+          spawn(/^win/.test(process.platform) ? "npm.cmd" : "npm", ["start"], {
             cwd: visualizerDir,
             stdio: "inherit",
-            shell: true,
           });
         } else {
           console.error("❌ Failed to build visualizer.");
@@ -71,10 +69,9 @@ program
       });
     } else {
       console.log("🚀 Launching visualizer (production mode)...");
-      spawn("npm", ["start"], {
+      spawn(/^win/.test(process.platform) ? "npm.cmd" : "npm", ["start"], {
         cwd: visualizerDir,
         stdio: "inherit",
-        shell: true,
       });
     }
   });
