@@ -7,11 +7,13 @@
     ],
     "jsx": "preserve",
     "module": "ESNext",
-    "ignoreDeprecations": "6.0",
-    "moduleResolution": "Bundler",
+    "moduleResolution": "Node",
+    "declaration": true,
+    "outDir": "dist",
+    "ignoreDeprecations": "5.0",
     "resolveJsonModule": true,
     "skipLibCheck": true,
-    "noEmit": true,
+    "noEmit": false,
     "strict": true,
     "baseUrl": ".",
     "paths": {
@@ -45,6 +47,11 @@
     ".next/types/**/*.ts"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    ".next",
+    "out",
+    "dist",
+    "**/*.test.ts",
+    "**/*.test.tsx"
   ]
 }

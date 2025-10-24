@@ -52,13 +52,6 @@ export default async function Page() {
                   <span className="text-xs text-ink-400 mt-1">Composite index (0–100)</span>
                 </div>
               }
-              hint={
-                <div className="text-xs mt-2 leading-relaxed text-ink-400">
-                  📈 <span className="font-medium text-ink-300">Industry Average:</span> 60–70<br />
-                  🎯 <span className="font-medium text-ink-300">Clean Code Target:</span> &lt;35<br />
-                  ⭐ <span className="font-medium text-ink-300">Excellent:</span> &lt;25
-                </div>
-              }
             />
             <StatCard title="Max fan-out" value={data.summary.maxFanOut} />
             <StatCard
@@ -75,9 +68,8 @@ export default async function Page() {
               }
             />
           </section>
-                        <SummaryInsight data={data} />
-
           <section>
+            <SummaryInsight data={data} />
             <ReportRecap data={data} />
           </section>
 
