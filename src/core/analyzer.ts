@@ -1,9 +1,9 @@
 // src/core/analyzer.ts
 import fs from "fs";
 import path from "path";
-import { parseFile } from "./parser.ts";
-import { computeMetrics } from "./metrics.ts";
-import { computeScore } from "./scorer.ts";
+import { parseFile } from "./parser";
+import { computeMetrics } from "./metrics";
+import { computeScore } from "./scorer";
 
 export async function analyzeProject(basePath: string) {
   const files: string[] = [];
@@ -14,7 +14,7 @@ export async function analyzeProject(basePath: string) {
       const p = path.join(dir, f);
       if (fs.statSync(p).isDirectory()) {
         collectFiles(p);
-      } else if (p.endsWith(".ts") || p.endsWith(".js")) {
+      } else if (p.endsWith("") || p.endsWith(".js")) {
         files.push(path.resolve(p)); // <-- absolute
       }
     }
@@ -36,9 +36,9 @@ export async function analyzeProject(basePath: string) {
     if (!dep.startsWith(".")) return null; // skip node_modules etc.
     const candidates = [
       path.resolve(baseDir, dep),
-      path.resolve(baseDir, dep + ".ts"),
+      path.resolve(baseDir, dep + ""),
       path.resolve(baseDir, dep + ".js"),
-      path.resolve(baseDir, dep, "index.ts"),
+      path.resolve(baseDir, dep, "index"),
       path.resolve(baseDir, dep, "index.js"),
     ];
     for (const c of candidates) {

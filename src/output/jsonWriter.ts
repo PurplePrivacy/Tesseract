@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
-import { BANDS, classifyRisk, grade } from "./formatter.ts";
-import { computePrioritiesForFile } from "../core/prioritizer.ts";
+import { BANDS, classifyRisk, grade } from "./formatter";
+import { computePrioritiesForFile } from "../core/prioritizer";
 
 export function writeJsonReport(
   basePath: string,

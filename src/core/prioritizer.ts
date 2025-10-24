@@ -1,4 +1,4 @@
-import type { Appreciation, GradeResult } from "../output/formatter.ts";
+import type { Appreciation, GradeResult } from "../output/formatter";
 
 export type PriorityLevel = "LOW" | "MEDIUM" | "HIGH";
 

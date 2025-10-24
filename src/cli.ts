@@ -1,9 +1,9 @@
 import { Command } from "commander";
 import path from "path";
 import fs from "fs";
-import { analyzeProject } from "./core/analyzer.ts";
-import { reportResults } from "./output/reporter.ts";
-import { writeJsonReport } from "./output/jsonWriter.ts";
+import { analyzeProject } from "./core/analyzer";
+import { reportResults } from "./output/reporter";
+import { writeJsonReport } from "./output/jsonWriter";
 
 function makeTimestamp() {
   const d = new Date();
