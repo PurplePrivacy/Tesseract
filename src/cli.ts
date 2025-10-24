@@ -51,17 +51,22 @@ program
     const visualizerDir = path.resolve("visualizer");
     const nextBuildDir = path.join(visualizerDir, ".next");
 
+    const npmCmd = process.platform === "win32" ? "npm.cmd" : "npm";
     if (!fs.existsSync(nextBuildDir)) {
       console.log("🧩 Building visualizer for the first time...");
-      spawn(/^win/.test(process.platform) ? "npm.cmd" : "npm", ["run", "build"], {
+      const buildProcess = spawn(npmCmd, ["run", "build"], {
         cwd: visualizerDir,
         stdio: "inherit",
-      }).on("exit", (code) => {
+        env: { ...process.env, PATH: process.env.PATH || "" }
+      });
+
+      buildProcess.on("exit", (code) => {
         if (code === 0) {
           console.log("🚀 Launching visualizer (production mode)...");
-          spawn(/^win/.test(process.platform) ? "npm.cmd" : "npm", ["start"], {
+          spawn(npmCmd, ["start"], {
             cwd: visualizerDir,
             stdio: "inherit",
+            env: { ...process.env, PATH: process.env.PATH || "" }
           });
         } else {
           console.error("❌ Failed to build visualizer.");
@@ -69,9 +74,10 @@ program
       });
     } else {
       console.log("🚀 Launching visualizer (production mode)...");
-      spawn(/^win/.test(process.platform) ? "npm.cmd" : "npm", ["start"], {
+      spawn(npmCmd, ["start"], {
         cwd: visualizerDir,
         stdio: "inherit",
+        env: { ...process.env, PATH: process.env.PATH || "" }
       });
     }
   });
