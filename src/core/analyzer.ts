@@ -60,7 +60,7 @@ function computeStructuralMetrics(filePath: string): {
   function visit(node: ts.Node) {
     // exports
     if (
-      (node.modifiers && node.modifiers.some(m => m.kind === ts.SyntaxKind.ExportKeyword)) ||
+      (node?..modifiers && node.modifiers.some(m => m.kind === ts.SyntaxKind.ExportKeyword)) ||
       ts.isExportDeclaration(node) ||
       ts.isExportAssignment(node)
     ) {
