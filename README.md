@@ -175,6 +175,7 @@ PRs welcome! Please keep changes small and focused.
 
 *(CONTRIBUTING.md coming soon)*
 
+Thanks !
 ---
 
 ## 📄 License
