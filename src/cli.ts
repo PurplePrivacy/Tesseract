@@ -48,38 +48,64 @@ program
     writeJsonReport(basePath, results, jsonPath);
 
     // Launch visualizer server in production mode
-    const visualizerDir = path.resolve("visualizer");
+    // Resolve the visualizer inside the installed package:
+    // dist/ (this file) -> ../visualizer
+    const visualizerDir = path.resolve(__dirname, "../visualizer");
     const nextBuildDir = path.join(visualizerDir, ".next");
+    const nodeModulesDir = path.join(visualizerDir, "node_modules");
 
-    const npmCmd = /^win/.test(process.platform) ? "npm.cmd" : "npm";
-    if (!fs.existsSync(nextBuildDir)) {
-      console.log("🧩 Building visualizer for the first time...");
-      const buildProcess = spawn(npmCmd, ["run", "build"], {
-        cwd: visualizerDir,
-        stdio: "inherit",
-        env: process.env
-      });
-
-      buildProcess.on("exit", (code) => {
-        if (code === 0) {
-          console.log("🚀 Launching visualizer (production mode)...");
-          spawn(npmCmd, ["start"], {
+    // Helper to run npm reliably even when npm is not on PATH.
+    // Prefer npm_execpath (the npm CLI JS), executed with the current Node.
+    function runNpm(args: string[]): Promise<number> {
+      return new Promise((resolve) => {
+        const npmJs = process.env.npm_execpath; // e.g., .../lib/node_modules/npm/bin/npm-cli.js
+        if (npmJs && fs.existsSync(npmJs)) {
+          const child = spawn(process.execPath, [npmJs, ...args], {
             cwd: visualizerDir,
             stdio: "inherit",
-            env: process.env
+            env: process.env,
           });
+          child.on("exit", (code) => resolve(code ?? 1));
         } else {
-          console.error("❌ Failed to build visualizer.");
+          // Fallback to npm binary name (platform-specific)
+          const npmCmd = process.platform === "win32" ? "npm.cmd" : "npm";
+          const child = spawn(npmCmd, args, {
+            cwd: visualizerDir,
+            stdio: "inherit",
+            env: process.env,
+          });
+          child.on("exit", (code) => resolve(code ?? 1));
         }
       });
-    } else {
-      console.log("🚀 Launching visualizer (production mode)...");
-      spawn(npmCmd, ["start"], {
-        cwd: visualizerDir,
-        stdio: "inherit",
-        env: process.env
-      });
     }
+
+    // Ensure dependencies, then build (if needed), then start.
+    (async () => {
+      try {
+        if (!fs.existsSync(nodeModulesDir)) {
+          console.log("📦 Installing visualizer dependencies...");
+          const installCode = await runNpm(["ci"]);
+          if (installCode !== 0) {
+            console.error("❌ Failed to install visualizer dependencies.");
+            return;
+          }
+        }
+
+        if (!fs.existsSync(nextBuildDir)) {
+          console.log("🧩 Building visualizer for the first time...");
+          const buildCode = await runNpm(["run", "build"]);
+          if (buildCode !== 0) {
+            console.error("❌ Failed to build visualizer.");
+            return;
+          }
+        }
+
+        console.log("🚀 Launching visualizer (production mode)...");
+        await runNpm(["start"]);
+      } catch (e) {
+        console.error("❌ Failed to launch visualizer:", e);
+      }
+    })();
   });
 
 program.parse(process.argv);
