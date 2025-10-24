@@ -51,6 +51,10 @@ export function computePrioritiesForFile(file: {
   fanOutLocal: number;
   tokenDensity: number;
   commentRatio: number;
+  avgFunctionLength: number;
+  avgParamCount: number;
+  methodCount: number;
+  exportCount: number;
   labels: Record<string, GradeResult>;
 }) {
   const { fanIn = 0, score = 0 } = file;

@@ -22,6 +22,10 @@ export function writeJsonReport(
       fanOutLocal:   grade(r.fanOutLocal ?? 0,   BANDS.fanOutLocal,   false, "fanOutLocal"),
       tokenDensity:  grade(r.tokenDensity ?? 0,  BANDS.tokenDensity,  false, "tokenDensity"),
       commentRatio:  grade(r.commentRatio ?? 0,  BANDS.commentRatio,  true,  "commentRatio"),
+      avgFunctionLength: grade(r.avgFunctionLength ?? 0, BANDS.avgFunctionLength, false, "avgFunctionLength"),
+      avgParamCount: grade(r.avgParamCount ?? 0, BANDS.avgParamCount, false, "avgParamCount"),
+      methodCount: grade(r.methodCount ?? 0, BANDS.methodCount, false, "methodCount"),
+      exportCount: grade(r.exportCount ?? 0, BANDS.exportCount, false, "exportCount"),
     };
 
     const priority = computePrioritiesForFile({
@@ -32,6 +36,10 @@ export function writeJsonReport(
       fanOutLocal: r.fanOutLocal ?? 0,
       tokenDensity: r.tokenDensity ?? 0,
       commentRatio: r.commentRatio ?? 0,
+      avgFunctionLength: r.avgFunctionLength ?? 0,
+      avgParamCount: r.avgParamCount ?? 0,
+      methodCount: r.methodCount ?? 0,
+      exportCount: r.exportCount ?? 0,
       labels,
     });
 
@@ -49,6 +57,10 @@ export function writeJsonReport(
         fanOutLocal: r.fanOutLocal ?? 0,
         tokenDensity: Number((r.tokenDensity ?? 0).toFixed(2)),
         commentRatio: Number((r.commentRatio ?? 0).toFixed(1)),
+        avgFunctionLength: Number((r.avgFunctionLength ?? 0).toFixed(2)),
+        avgParamCount: Number((r.avgParamCount ?? 0).toFixed(2)),
+        methodCount: r.methodCount ?? 0,
+        exportCount: r.exportCount ?? 0,
         score: r.score,
         risk: classifyRisk(r.score ?? 0),
       },
@@ -81,6 +93,10 @@ export function writeJsonReport(
       fanOutLocal: countByLabel("fanOutLocal"),
       tokenDensity: countByLabel("tokenDensity"),
       commentRatio: countByLabel("commentRatio"),
+      avgFunctionLength: countByLabel("avgFunctionLength"),
+      avgParamCount: countByLabel("avgParamCount"),
+      methodCount: countByLabel("methodCount"),
+      exportCount: countByLabel("exportCount"),
     },
     priorityTop: filesAugmented
       .map((f) => ({

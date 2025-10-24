@@ -7,7 +7,8 @@ export default function ScoringCard() {
 
       <div className="text-sm text-ink-300">
         The <strong>Composite Score</strong> is a 0–100 index where <em>lower</em> indicates easier comprehension.
-        It blends Cyclomatic Complexity, Nesting Depth, Fan-Out (local), Token Density, and Comment Ratio,
+        It blends Cyclomatic Complexity, Nesting Depth, Fan-Out (local), Token Density, Comment Ratio,
+        and new metrics including Average Function Length, Average Parameter Count, Method Count per Class, and Export Count,
         normalized into bands and combined to surface hotspots.
       </div>
 
@@ -36,10 +37,28 @@ export default function ScoringCard() {
             Tokens per line. Higher density suggests harder visual parsing and lower skimmability.
           </div>
         </div>
-        <div className="bg-white/5 rounded-xl p-4 border border-white/10 md:col-span-2">
-          <div className="font-semibold mb-1">Comment Ratio</div>
+        <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+          <div className="font-semibold mb-1">Average Function Length</div>
           <div className="text-sm text-ink-300">
-            Percentage of comment lines. Higher is usually better for onboarding and maintenance.
+            Average number of lines per function. Longer functions reduce readability and cohesion.
+          </div>
+        </div>
+        <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+          <div className="font-semibold mb-1">Average Parameter Count</div>
+          <div className="text-sm text-ink-300">
+            Average parameters per function. High parameter counts indicate possible violations of SRP or missing encapsulation.
+          </div>
+        </div>
+        <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+          <div className="font-semibold mb-1">Method Count per Class</div>
+          <div className="text-sm text-ink-300">
+            Number of methods per class. Large classes often signal low cohesion or God Object tendencies.
+          </div>
+        </div>
+        <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+          <div className="font-semibold mb-1">Export Count</div>
+          <div className="text-sm text-ink-300">
+            Number of exported symbols. High export counts may suggest unclear module boundaries or overexposure.
           </div>
         </div>
       </div>
@@ -52,6 +71,7 @@ export default function ScoringCard() {
             <li><strong>Cyclomatic</strong> and <strong>Nesting</strong> have the most influence.</li>
             <li><strong>Fan-Out (local)</strong> and <strong>Token Density</strong> affect coupling/readability.</li>
             <li><strong>Comment Ratio</strong> has a smaller corrective effect.</li>
+            <li>New metrics like <strong>Average Function Length</strong>, <strong>Average Parameter Count</strong>, <strong>Method Count per Class</strong>, and <strong>Export Count</strong> influence cohesion and maintainability factors.</li>
           </ul>
           Values are banded then blended and mapped to 0–100.
         </div>

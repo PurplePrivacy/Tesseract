@@ -1,35 +1,46 @@
 "use client";
 import React from "react";
-import { TesseractJson } from "@/lib/types";
+import type { TesseractJson } from "@/lib/types";
 
 export default function SummaryInsight({ data }: { data: TesseractJson }) {
   const s = data.summary;
+  const total = Math.max(1, s.totalFiles || 1);
+  // countsByLabel is metric → { EXCELLENT, GOOD, AVERAGE, SUBPAR, POOR }
+  const cb: any = (s as any).countsByLabel || {};
 
-  // Basic heuristics
+  // Helper: count problematic files for a given metric
+  const heavyCount = (metric: string) => (cb[metric]?.POOR ?? 0) + (cb[metric]?.SUBPAR ?? 0);
+  const dominates = (metric: string, frac = 0.15) => heavyCount(metric) / total >= frac; // 15%+ of files
+
   const avg = s.avgScore;
-  const cyclo = s.countsByLabel.avgCyclomatic;
-  const nesting = s.countsByLabel.avgNesting;
-  const fanOut = s.countsByLabel.fanOutLocal;
+  let base: string;
+  if (avg < 25) base = "Excellent overall clarity with low cognitive load.";
+  else if (avg < 40) base = "Solid readability; most modules are easy to follow.";
+  else if (avg < 60) base = "Generally understandable, with a few complexity hotspots.";
+  else if (avg < 80) base = "Elevated complexity; several areas deserve refactoring.";
+  else base = "Severe complexity; a focused refactor plan is recommended.";
 
-  let insight = "Balanced complexity with moderate readability.";
+  const notes: string[] = [];
+  if (dominates("fanOutLocal")) notes.push("coupling between modules is a primary driver");
+  if (dominates("avgFunctionLength") || dominates("maxFunctionLength")) notes.push("long functions reduce scanability");
+  if (dominates("avgParamCount") || dominates("maxParamCount")) notes.push("bulky parameter lists hint at data clumps");
+  if (dominates("avgCyclomatic")) notes.push("branching complexity increases reasoning effort");
+  if (dominates("avgNesting")) notes.push("deep nesting affects linear reading flow");
+  if (dominates("methodCount") || dominates("maxMethodsPerClass")) notes.push("large classes suggest SRP pressure");
+  if (dominates("foreignAccessCount")) notes.push("frequent foreign member access signals feature envy");
+  if (dominates("totalReturnCount")) notes.push("many return paths complicate control flow");
+  if (dominates("exportCount")) notes.push("wide public APIs reduce cohesion");
 
-  if (avg < 15 && cyclo.EXCELLENT > s.totalFiles / 2) {
-    insight = "Outstanding readability and structure. Minimal refactoring needed.";
-  } else if (avg < 30) {
-    insight = "Strong readability and low complexity across modules.";
-  } else if (avg < 60) {
-    insight = "Generally clear codebase, but some hotspots may need modular refactor.";
-  } else if (avg < 80) {
-    insight = "High complexity — consider splitting large functions or reducing nesting.";
-  } else {
-    insight = "Severe architectural complexity detected. Major refactor recommended.";
+  let insight = base;
+  if (notes.length) {
+    const topNotes = notes.slice(0, 2).join("; ");
+    insight += ` ${topNotes}.`;
   }
 
-  // Add nuance if certain patterns dominate
-  if (fanOut.POOR > 0 && avg > 30) {
-    insight += " Excessive coupling between modules is a primary contributor.";
-  } else if (nesting.SUBPAR > 0 && avg > 20) {
-    insight += " Deep nesting may affect code scanning speed.";
+  // Nudge toward the top actionable item when available
+  const top = s.priorityTop?.[0];
+  if (top?.file && top?.topMetric?.metric && top?.topMetric?.label) {
+    insight += ` Focus first on ${top.file} (${top.topMetric.metric}: ${top.topMetric.label}).`;
   }
 
   return (
