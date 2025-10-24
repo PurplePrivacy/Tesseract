@@ -1,6 +1,6 @@
 {
   "name": "@purpleprivacy/tesseract-cli",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "Tesseract – The Refactoring Compass: Analyze code complexity, cognitive load, and architectural health.",
   "type": "module",
   "main": "./dist/cli.js",
@@ -10,7 +10,10 @@
   },
   "files": [
     "dist",
-    "src"
+    "src",
+    "visualizer",
+    "README.md",
+    "package.json"
   ],
   "scripts": {
     "clean": "rm -rf dist",
