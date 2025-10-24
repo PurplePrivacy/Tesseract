@@ -80,13 +80,13 @@ export function computePrioritiesForFile(file: {
   .map(({ metric, entry }) => {
     return {
       metric,
-      label: entry.label,
+      label: entry?.label,
       priorityScore: Number(
-        (entry.severity * (weights as any)[metric] * changeRisk * hotspot).toFixed(3)
+        (entry!.severity * (weights as any)[metric] * changeRisk * hotspot).toFixed(3)
       ),
       insight:
-        INSIGHT_MESSAGES[metric]?.[entry.label] ??
-        INSIGHT_MESSAGES.DEFAULT?.[entry.label] ??
+        INSIGHT_MESSAGES[metric]?.[entry!.label] ??
+        INSIGHT_MESSAGES.DEFAULT?.[entry!.label] ??
         "",
     };
   })
