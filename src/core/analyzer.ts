@@ -1,7 +1,15 @@
 // src/core/analyzer.ts
+import type * as tsTypes from "typescript";
 import fs from "fs";
 import path from "path";
-import * as ts from "typescript";
+
+let ts: typeof tsTypes;
+try {
+  ts = require("typescript");
+} catch {
+  console.error("❌ TypeScript module not found. Please install it locally: `npm install typescript`");
+  process.exit(1);
+}
 import { parseFile } from "./parser";
 import { computeMetrics } from "./metrics";
 import { computeScore } from "./scorer";
@@ -60,7 +68,7 @@ function computeStructuralMetrics(filePath: string): {
   function visit(node: ts.Node) {
     // exports
     if (
-      (node?..modifiers && node.modifiers.some(m => m.kind === ts.SyntaxKind.ExportKeyword)) ||
+      ((node as ts.Node & { modifiers?: ts.NodeArray<ts.Modifier> }).modifiers?.some((m: ts.Modifier) => m.kind === ts.SyntaxKind.ExportKeyword)) ||
       ts.isExportDeclaration(node) ||
       ts.isExportAssignment(node)
     ) {
