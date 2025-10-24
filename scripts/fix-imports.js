@@ -3,6 +3,7 @@ import path from "path";
 
 const distDir = path.resolve("./dist");
 
+
 function fixImportsRecursively(dir) {
   for (const file of fs.readdirSync(dir)) {
     const full = path.join(dir, file);
