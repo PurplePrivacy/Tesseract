@@ -40,7 +40,7 @@ program
     writeJsonReport(basePath, results, jsonPath);
 
     // ✅ Resolve packaged visualizer (relative to dist/cli.js) and run from a working dir
-    const pkgVisualizerDir = path.resolve(__dirname, "../../visualizer");
+    const pkgVisualizerDir = path.resolve(__dirname, "../visualizer");
     const workDir = path.resolve(process.cwd(), ".tesseract-visualizer");
     const workNodeModules = path.join(workDir, "node_modules");
     const workNextBuild = path.join(workDir, ".next");
