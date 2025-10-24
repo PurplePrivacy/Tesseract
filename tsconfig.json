@@ -1,15 +1,18 @@
 {
   // Visit https://aka.ms/tsconfig to read more about this file
   "compilerOptions": {
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
     // File Layout
     "rootDir": "./src",
     "outDir": "./dist",
 
-    "emitDeclarationOnly": true,
-    "allowImportingTsExtensions": true,
+    "emitDeclarationOnly": false,
+    "noEmit": false,
     // Environment Settings
     // See also https://aka.ms/tsconfig/module
-    "module": "nodenext",
+    "module": "esnext",
+    "moduleResolution": "node",
     "target": "esnext",
     "types": ["node"],
     // For nodejs:

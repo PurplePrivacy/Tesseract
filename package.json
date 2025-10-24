@@ -1,17 +1,20 @@
 {
   "name": "@purpleprivacy/tesseract-cli",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Tesseract – The Refactoring Compass: Analyze code complexity, cognitive load, and architectural health.",
   "type": "module",
-  "main": "dist/cli.js",
+  "main": "./dist/cli.js",
+  "types": "./dist/cli.d.ts",
   "bin": {
     "tesseract-analysis": "./dist/cli.js"
   },
   "files": [
-    "dist"
+    "dist",
+    "src"
   ],
   "scripts": {
-    "build": "tsc",
+    "clean": "rm -rf dist",
+    "build": "tsc --noEmit false",
     "start": "npx tsx src/cli.ts",
     "prepare": "npm run build",
     "test": "echo \"No tests yet\""
@@ -28,6 +31,9 @@
   ],
   "author": "PurplePrivacy",
   "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  },
   "dependencies": {
     "chalk": "^5.6.2",
     "cli-table3": "^0.6.5",
