@@ -4,6 +4,7 @@ import StatCard from "@/components/StatCard";
 import FilesTable from "@/components/FilesTable";
 import ScoringCard from "@/components/ScoringCard";
 import SummaryInsight from "@/components/SummaryInsight";
+import ReportRecap from "@/components/ReportRecap";
 
 
 export default async function Page() {
@@ -42,9 +43,22 @@ export default async function Page() {
           <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <StatCard title="Files analyzed" value={data.summary.totalFiles} />
             <StatCard
-              title="Average score"
-              value={<span className={getScoreColor(data.summary.avgScore)}>{data.summary.avgScore.toFixed(1)}</span>}
-              hint="Composite index (0–100). Lower indicates less cognitive load."
+              title="Average Score"
+              value={
+                <div className="flex flex-col items-center bg-gradient-to-b from-ink-900/30 to-ink-700/10 rounded-lg py-2 px-1 w-full">
+                  <span className={`text-3xl font-semibold ${getScoreColor(data.summary.avgScore)}`}>
+                    {data.summary.avgScore.toFixed(1)}
+                  </span>
+                  <span className="text-xs text-ink-400 mt-1">Composite index (0–100)</span>
+                </div>
+              }
+              hint={
+                <div className="text-xs mt-2 leading-relaxed text-ink-400">
+                  📈 <span className="font-medium text-ink-300">Industry Average:</span> 60–70<br />
+                  🎯 <span className="font-medium text-ink-300">Clean Code Target:</span> &lt;35<br />
+                  ⭐ <span className="font-medium text-ink-300">Excellent:</span> &lt;25
+                </div>
+              }
             />
             <StatCard title="Max fan-out" value={data.summary.maxFanOut} />
             <StatCard
@@ -61,7 +75,12 @@ export default async function Page() {
               }
             />
           </section>
-              <SummaryInsight data={data} />
+                        <SummaryInsight data={data} />
+
+          <section>
+            <ReportRecap data={data} />
+          </section>
+
           <section>
             <h2 className="text-lg font-semibold mb-3">Files</h2>
             <FilesTable files={data.files} />
