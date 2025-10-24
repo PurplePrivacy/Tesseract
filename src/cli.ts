@@ -5,7 +5,7 @@ import fs from "fs";
 import { analyzeProject } from "./core/analyzer";
 import { reportResults } from "./output/reporter";
 import { writeJsonReport } from "./output/jsonWriter";
-import { spawn } from "child_process";
+import { exec } from "child_process";
 import { fileURLToPath } from "url";
 
 // Shim __dirname for ES modules
@@ -39,57 +39,50 @@ program
     const jsonPath = path.join(outDir, `cognitive-report-${timestamp}.json`);
     writeJsonReport(basePath, results, jsonPath);
 
-    // ✅ Correctly resolve visualizer (relative to dist/cli.js)
-    const visualizerDir = path.resolve(__dirname, "../../visualizer");
-    const nextBuildDir = path.join(visualizerDir, ".next");
-    const nodeModulesDir = path.join(visualizerDir, "node_modules");
+    // ✅ Resolve packaged visualizer (relative to dist/cli.js) and run from a working dir
+    const pkgVisualizerDir = path.resolve(__dirname, "../../visualizer");
+    const workDir = path.resolve(process.cwd(), ".tesseract-visualizer");
+    const workNodeModules = path.join(workDir, "node_modules");
+    const workNextBuild = path.join(workDir, ".next");
 
-    // Helper to run npm safely
-    function runNpm(args: string[]): Promise<number> {
-      return new Promise((resolve) => {
-        const npmJs = process.env.npm_execpath;
-        if (npmJs && fs.existsSync(npmJs)) {
-          const child = spawn(process.execPath, [npmJs, ...args], {
-            cwd: visualizerDir,
-            stdio: "inherit",
-            env: process.env,
-          });
-          child.on("exit", (code) => resolve(code ?? 1));
-        } else {
-          const npmCmd = process.platform === "win32" ? "npm.cmd" : "npm";
-          const child = spawn(npmCmd, args, {
-            cwd: visualizerDir,
-            stdio: "inherit",
-            env: process.env,
-          });
-          child.on("exit", (code) => resolve(code ?? 1));
-        }
+    // Fresh copy into working dir (Next.js has trouble building from node_modules)
+    try { fs.rmSync(workDir, { recursive: true, force: true }); } catch {}
+    fs.cpSync(pkgVisualizerDir, workDir, { recursive: true });
+
+    // Link (or copy) the reports directory so the UI can read latest JSONs
+    try {
+      const reportsTarget = path.resolve(outDir);
+      const reportsLink = path.join(workDir, "reports");
+      try { fs.rmSync(reportsLink, { recursive: true, force: true }); } catch {}
+      try { fs.symlinkSync(reportsTarget, reportsLink, "dir"); }
+      catch { fs.cpSync(reportsTarget, reportsLink, { recursive: true }); }
+    } catch (e) {
+      console.warn("⚠️ Unable to link/copy reports folder:", e);
+    }
+
+    // Helper: run commands via shell so npm is resolved from PATH (avoids NVM ENOENT)
+    function execIn(cmd: string, cwd: string): Promise<void> {
+      return new Promise((resolve, reject) => {
+        const child = exec(cmd, { cwd, env: process.env }, (err) => {
+          if (err) reject(err); else resolve();
+        });
+        child.stdout?.pipe(process.stdout);
+        child.stderr?.pipe(process.stderr);
       });
     }
 
-    // Build & start visualizer
     (async () => {
       try {
-        if (!fs.existsSync(nodeModulesDir)) {
+        if (!fs.existsSync(workNodeModules)) {
           console.log("📦 Installing visualizer dependencies...");
-          const installCode = await runNpm(["ci"]);
-          if (installCode !== 0) {
-            console.error("❌ Failed to install visualizer dependencies.");
-            return;
-          }
+          await execIn("npm ci", workDir);
         }
-
-        if (!fs.existsSync(nextBuildDir)) {
+        if (!fs.existsSync(workNextBuild)) {
           console.log("🧩 Building visualizer for the first time...");
-          const buildCode = await runNpm(["run", "build"]);
-          if (buildCode !== 0) {
-            console.error("❌ Failed to build visualizer.");
-            return;
-          }
+          await execIn("npm run build", workDir);
         }
-
-        console.log("🚀 Launching visualizer (production mode)...");
-        await runNpm(["start"]);
+        console.log("🚀 Launching visualizer (production mode) on http://localhost:5555 ...");
+        await execIn("npm start", workDir);
       } catch (err) {
         console.error("❌ Failed to launch visualizer:", err);
       }
