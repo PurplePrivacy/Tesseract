@@ -6,6 +6,9 @@ import { analyzeProject } from "./core/analyzer";
 import { reportResults } from "./output/reporter";
 import { writeJsonReport } from "./output/jsonWriter";
 import { spawn } from "child_process";
+import { fileURLToPath } from "url";
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 function makeTimestamp() {
   const d = new Date();
