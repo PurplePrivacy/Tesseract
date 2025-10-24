@@ -14,7 +14,7 @@
   ],
   "scripts": {
     "clean": "rm -rf dist",
-    "build": "tsc --noEmit false",
+    "build": "tsc --noEmit false && node scripts/fix-imports.js",
     "start": "npx tsx src/cli.ts",
     "prepare": "npm run build",
     "test": "echo \"No tests yet\""
