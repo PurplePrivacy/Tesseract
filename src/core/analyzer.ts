@@ -5,16 +5,30 @@ import { parseFile } from "./parser";
 import { computeMetrics } from "./metrics";
 import { computeScore } from "./scorer";
 
+const DEFAULT_IGNORED_DIRS = [
+  "node_modules",
+  "dist",
+  "build",
+  ".next",
+  ".nuxt",
+  ".turbo",
+  ".vercel",
+  "coverage",
+  "out",
+  "public"
+];
+
 export async function analyzeProject(basePath: string) {
   const files: string[] = [];
 
   // Recursively collect .ts and .js files AS ABSOLUTE PATHS
   function collectFiles(dir: string) {
     for (const f of fs.readdirSync(dir)) {
+      if (DEFAULT_IGNORED_DIRS.includes(f)) continue;
       const p = path.join(dir, f);
       if (fs.statSync(p).isDirectory()) {
         collectFiles(p);
-      } else if (p.endsWith("") || p.endsWith(".js")) {
+      } else if (p.endsWith(".ts") || p.endsWith(".tsx") || p.endsWith(".js")) {
         files.push(path.resolve(p)); // <-- absolute
       }
     }

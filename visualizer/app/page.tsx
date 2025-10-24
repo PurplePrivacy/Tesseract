@@ -20,6 +20,14 @@ export default async function Page() {
     return "text-red-500";                        // Critical
   }
 
+  function getScoreLabel(score: number) {
+    if (score < 20) return "EXCELLENT";      // Clear
+    if (score < 40) return "GOOD";      // Stable
+    if (score < 60) return "AVERAGE";     // Moderate
+    if (score < 80) return "COMPLEX";     // Complex
+    return "CRITICAL";                        // Critical
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex items-end justify-between">
@@ -43,11 +51,11 @@ export default async function Page() {
           <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <StatCard title="Files analyzed" value={data.summary.totalFiles} />
             <StatCard
-              title="Average Score"
+              title="Average Cognitive Load Score"
               value={
                 <div className="flex flex-col items-center bg-gradient-to-b from-ink-900/30 to-ink-700/10 rounded-lg py-2 px-1 w-full">
                   <span className={`text-3xl font-semibold ${getScoreColor(data.summary.avgScore)}`}>
-                    {data.summary.avgScore.toFixed(1)}
+                    {data.summary.avgScore.toFixed(1)}  -  {getScoreLabel(data.summary.avgScore)}
                   </span>
                   <span className="text-xs text-ink-400 mt-1">Composite index (0–100)</span>
                 </div>
